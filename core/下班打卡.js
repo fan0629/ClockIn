@@ -1,4 +1,6 @@
 var common = require('./工具方法.js');
+let singletonRequire = require('../lib/SingletonRequirer.js')(runtime, this)
+let floatyInstance = singletonRequire('FloatyUtil')
 
 module.exports = {
     run() {
@@ -6,6 +8,10 @@ module.exports = {
     }
 }
 function main() {
+    if (!floatyInstance.init()) {
+        toast('创建悬浮窗失败')
+        exit()
+    }
     floatyLog("开始下班打卡")
     sleep(1500);
     launchApp("天融信云服务");
