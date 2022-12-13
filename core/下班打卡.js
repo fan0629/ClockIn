@@ -27,6 +27,6 @@ function main() {
 
 function floatyLog(str) {
     log(str)
-    context += "\n" + str;
-    floatyInstance.setFloatyInfo({ x: parseInt(config.device_width / 3.7), y: parseInt(config.device_height / 3) }, context, { textSize: 15 })
+    context += context === "" ? str : "\n" + str;
+    floatyInstance.setFloatyInfo({ x: parseInt(config.device_width / 4), y: parseInt(config.device_height / 3) }, context, { textSize: 15 })
 }
