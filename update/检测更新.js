@@ -32,7 +32,7 @@ let apiUrl = null
 let downloader = null
 if (chose === 0) {
   toastLog('使用Github Release 作为更新源')
-  apiUrl = 'https://api.github.com/repos/${user}/${repo}/releases/latest'
+  apiUrl = 'https://api.github.com/repos/fan0629/ClockIn/releases/latest'
   downloader = new GithubReleaseDownloader()
 } else {
   toastLog('使用Gitee Release 作为更新源')
