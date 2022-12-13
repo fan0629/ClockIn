@@ -19,6 +19,7 @@ let commonFunctions = singletonRequire('CommonFunction')
 main();
 
 function main() {
+    commonFunctions.killDuplicateScript()
     unlocker.exec()
 
     commonFunctions.requestScreenCaptureOrRestart()
