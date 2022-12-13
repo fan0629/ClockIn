@@ -1,0 +1,19 @@
+# This is a basic workflow to help you get started with Actions
+
+name: Release Drafter
+
+on:
+  push:
+    branches:
+      - master # 在 master 分支发生更新时执行此 action
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  draft_release:
+    name: Draft release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: fan0629/master@v5.2.0
+        name: Draft
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
