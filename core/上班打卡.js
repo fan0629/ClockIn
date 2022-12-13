@@ -19,8 +19,8 @@ let radius = 600
 var storage = storages.create("com.fan.打卡"); //获取本地存储
 var nowDate = new Date().toLocaleDateString(); //获取当日日期
 
-module.export = {
-    main() {
+module.exports = {
+    run() {
         main();
     }
 }
@@ -121,8 +121,10 @@ function getNowFormatDate() {
     var date = new Date();
     var seperator1 = "";
     var year = date.getFullYear();
-    var month = (date.getMonth() + 1).padStart(2, '0');
-    var strDate = date.getDate().padStart(2, '0');
+    var month = date.getMonth() + 1;
+    month = month < 10 ? "0" + month : month;
+    var strDate = date.getDate();
+    strDate = strDate < 10 ? "0" + strDate : strDate;
     var currentdate = year + seperator1 + month + seperator1 + strDate;
     return currentdate;
 }
