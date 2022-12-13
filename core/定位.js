@@ -21,13 +21,13 @@ const locationManager = context.getSystemService(Context.LOCATION_SERVICE)
 const networkManager = context.getSystemService(Context.CONNECTIVITY_SERVICE)
 var Network = __ => {
         return !!networkManager.getActiveNetworkInfo();
-    } /* 判断是否开启网络 */ ,
+    } /* 判断是否开启网络 */,
     GPS = __ => {
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    } /* 判断是否开启GPS位置信息 */ ,
+    } /* 判断是否开启GPS位置信息 */,
     AGPS = __ => {
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-    } /* 判断是否开启位置权限 */ ,
+    } /* 判断是否开启位置权限 */,
     Permission = _ => {
         !GPS() && openAGPS();
         !AGPS() && openAGPS();
@@ -46,10 +46,12 @@ function getLocationLoop() {
         if (provider != null) {
             log("provider: " + provider);
             location = locationManager.getLastKnownLocation(provider);
-            locationManager.requestLocationUpdates(provider, 1000, 0, locationListener);
         }
         if (location == null) {
-            log("GPS信号弱，请移动到室外开阔场地！")
+            log("GPS信号弱，请移动到室外开阔场地！");
+            locationManager.requestLocationUpdates(provider, 1000, 0, locationListener);
+        } else {
+            locationManager.removeUpdates(locationListener);
         }
         return location;
     }
@@ -60,7 +62,7 @@ function getGPSInfo() { /* 由location获取定位信息 */
     log(location)
     if (location) {
         let gc = new android.location.Geocoder(context, java.util.Locale.getDefault()),
-            result = gc.getFromLocation(location.getLatitude() /* 纬度 */ , location.getLongitude() /* n经度 */ , 1),
+            result = gc.getFromLocation(location.getLatitude() /* 纬度 */, location.getLongitude() /* n经度 */, 1),
             GPSInfo = {
                 Time: new Date(location.time)
             }
@@ -77,60 +79,68 @@ function getGPSInfo() { /* 由location获取定位信息 */
 }
 
 function getLocationListener() {
-    return new LocationListener() {
+    return new LocationListener()
+    {
         /**
          * 位置信息变化时触发:当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
          * @param location
          */
-        onLocationChanged(location) {
-                Toast.makeText(MainActivity.this, "onLocationChanged函数被触发！", Toast.LENGTH_SHORT).show();
-                updateUI(location);
-                Log.i(TAG, "时间：" + location.getTime());
-                Log.i(TAG, "经度：" + location.getLongitude());
-                Log.i(TAG, "纬度：" + location.getLatitude());
-                Log.i(TAG, "海拔：" + location.getAltitude());
-            },
+        onLocationChanged(location)
+        {
+            Toast.makeText(MainActivity.this, "onLocationChanged函数被触发！", Toast.LENGTH_SHORT).show();
+            updateUI(location);
+            Log.i(TAG, "时间：" + location.getTime());
+            Log.i(TAG, "经度：" + location.getLongitude());
+            Log.i(TAG, "纬度：" + location.getLatitude());
+            Log.i(TAG, "海拔：" + location.getAltitude());
+        }
+    ,
 
-            /**
-             * GPS状态变化时触发:Provider被disable时触发此函数，比如GPS被关闭
-             * @param provider
-             * @param status
-             * @param extras
-             */
-            onStatusChanged(provider, status, extras) {
-                switch (status) {
-                    //GPS状态为可见时
-                    case LocationProvider.AVAILABLE:
-                        Toast.makeText(MainActivity.this, "onStatusChanged：当前GPS状态为可见状态", Toast.LENGTH_SHORT).show();
-                        break;
-                        //GPS状态为服务区外时
-                    case LocationProvider.OUT_OF_SERVICE:
-                        Toast.makeText(MainActivity.this, "onStatusChanged:当前GPS状态为服务区外状态", Toast.LENGTH_SHORT).show();
-                        break;
-                        //GPS状态为暂停服务时
-                    case LocationProvider.TEMPORARILY_UNAVAILABLE:
-                        Toast.makeText(MainActivity.this, "onStatusChanged:当前GPS状态为暂停服务状态", Toast.LENGTH_SHORT).show();
-                        break;
-                }
-            },
-
-            /**
-             * 方法描述：GPS开启时触发
-             * @param provider
-             */
-            onProviderEnabled(provider) {
-                Toast.makeText(MainActivity.this, "onProviderEnabled:方法被触发", Toast.LENGTH_SHORT).show();
-                getLocation();
-            },
-
-            /**
-             * 方法描述： GPS禁用时触发
-             * @param provider
-             */
-            onProviderDisabled(provider) {
-
+        /**
+         * GPS状态变化时触发:Provider被disable时触发此函数，比如GPS被关闭
+         * @param provider
+         * @param status
+         * @param extras
+         */
+        onStatusChanged(provider, status, extras)
+        {
+            switch (status) {
+                //GPS状态为可见时
+                case LocationProvider.AVAILABLE:
+                    Toast.makeText(MainActivity.this, "onStatusChanged：当前GPS状态为可见状态", Toast.LENGTH_SHORT).show();
+                    break;
+                //GPS状态为服务区外时
+                case LocationProvider.OUT_OF_SERVICE:
+                    Toast.makeText(MainActivity.this, "onStatusChanged:当前GPS状态为服务区外状态", Toast.LENGTH_SHORT).show();
+                    break;
+                //GPS状态为暂停服务时
+                case LocationProvider.TEMPORARILY_UNAVAILABLE:
+                    Toast.makeText(MainActivity.this, "onStatusChanged:当前GPS状态为暂停服务状态", Toast.LENGTH_SHORT).show();
+                    break;
             }
-    };
+        }
+    ,
+
+        /**
+         * 方法描述：GPS开启时触发
+         * @param provider
+         */
+        onProviderEnabled(provider)
+        {
+            Toast.makeText(MainActivity.this, "onProviderEnabled:方法被触发", Toast.LENGTH_SHORT).show();
+            getLocation();
+        }
+    ,
+
+        /**
+         * 方法描述： GPS禁用时触发
+         * @param provider
+         */
+        onProviderDisabled(provider)
+        {
+
+        }
+    }
 }
 
 function openGPS() {
