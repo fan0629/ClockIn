@@ -92,8 +92,8 @@ let executeArguments = engines.myEngine().execArgv
 debugInfo(['启动参数：{}', JSON.stringify(executeArguments)])
 // 定时启动的任务, 将截图权限滞后请求
 if (!executeArguments.intent || executeArguments.executeByDispatcher) {
-  commonFunctions.requestScreenCaptureOrRestart()
-  commonFunctions.ensureDeviceSizeValid()
+  //commonFunctions.requestScreenCaptureOrRestart()
+  //commonFunctions.ensureDeviceSizeValid()
 }
 // 初始化悬浮窗
 if (!FloatyInstance.init()) {

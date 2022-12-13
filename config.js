@@ -61,7 +61,7 @@ let default_config = {
   // github release url 用于检测更新状态
   github_latest_url: '',
   // 延迟启动时延 5秒 悬浮窗中进行的倒计时时间
-  delayStartTime: 3,
+  delayStartTime: 0,
   device_width: device.width,
   device_height: device.height,
   // 是否是AutoJS Pro  需要屏蔽部分功能，暂时无法实现：生命周期监听等 包括通话监听

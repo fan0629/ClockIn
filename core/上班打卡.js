@@ -2,6 +2,7 @@ let common = require('./工具方法.js');
 let GPS = require('./定位');
 let singletonRequire = require('../lib/SingletonRequirer.js')(runtime, this)
 let Timers = singletonRequire("Timers")
+let floatyInstance = singletonRequire('FloatyUtil')
 
 /**
  * 默认地球半径,赤道半径(单位m)
@@ -18,28 +19,36 @@ let commutingTime = 20
 let radius = 600
 var storage = storages.create("com.fan.打卡"); //获取本地存储
 var nowDate = new Date().toLocaleDateString(); //获取当日日期
+let context = "";
 
 module.exports = {
     run() {
         main();
+        sleep(2000);
+        exit();
     }
 }
 
 function main() {
+    if (!floatyInstance.init()) {
+        toast('创建悬浮窗失败')
+        exit()
+    }
+    floatyLog("开始上班打卡")
     let response = http.get("http://tool.bitefu.net/jiari/?d=" + getNowFormatDate());
     let isHoliday = response.body.string()
     log(isHoliday)
     if (isHoliday != "0") {
-        log("今天不是工作日，好好休息吧！")
-        exit()
+        floatyLog("今天不是工作日，好好休息吧！")
+        return
     }
     if (new Date().getHours() >= 10) {
-        log("已过上班打卡时间！")
-        exit();
+        floatyLog("已过上班打卡时间！")
+        return
     }
     if (storage.get(nowDate)) {
-        log("上班已打卡，脚本退出");
-        exit();
+        floatyLog("上班已打卡，脚本退出");
+        return
     }
     let location = GPS.getLocation();
     if (!location) {
@@ -47,19 +56,19 @@ function main() {
             path: engines.myEngine().source,
             date: Date.now() + 60e3,
         });
-        log("获取gps失败，一分钟后重试！")
-        exit();
+        floatyLog("获取gps失败，一分钟后重试！")
+        return
     }
     let distance = getDistance(location.getLongitude(), location.getLatitude(), companyLongitude, companyLatitude)
-    log("距离公司" + distance + "米");
+    floatyLog("距离公司" + distance + "米");
     if (distance > radius) {
         let waitMins = (distance - radius) / (commutingDistance / commutingTime)
         Timers.addDisposableTask({
             path: engines.myEngine().source,
             date: Date.now() + waitMins * 60e3,
         });
-        log("下次尝试打卡时间：" + waitMins + "分后");
-        exit();
+        floatyLog("下次尝试打卡时间：" + waitMins + "分后");
+        return;
     }
 
     sleep(1500);
@@ -70,9 +79,9 @@ function main() {
 
     while (textContains("未进入考勤范围").exists() || !textMatches(/上班打卡.*/).exists()) {
         if (text("正常").exists() || textContains("下班打卡").exists()) {
-            toastLog("上班已打卡，脚本退出");
+            floatyLog("上班已打卡，脚本退出");
             storage.put(nowDate, true);
-            exit();
+            return;
         }
         back();
         sleep(1500);
@@ -89,7 +98,13 @@ function main() {
         path: files.path('./下班打卡.js'),
         date: Date.now() + 8.55 * 3.6e6,
     });
-    exit();
+}
+
+
+function floatyLog(str) {
+    log(str)
+    context += "\n" + str;
+    floatyInstance.setFloatyInfo({ x: parseInt(config.device_width / 3.7), y: parseInt(config.device_height / 3) }, context, { textSize: 15 })
 }
 
 /**
