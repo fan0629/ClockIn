@@ -12,29 +12,33 @@ var accounts = [
 var storage = storages.create("com.fan.能量雨"); //获取本地存储
 var nowDate = new Date().toLocaleDateString(); //获取当日日期
 var set = []; //记录成功操作
+let unlocker = require('../lib/Unlock.js')
+let singletonRequire = require('../lib/SingletonRequirer.js')(runtime, this)
+let commonFunctions = singletonRequire('CommonFunction')
 
-module.exports = {
-    run() {
-        main();
-    }
-}
+main();
 
 function main() {
+    unlocker.exec()
+
+    commonFunctions.requestScreenCaptureOrRestart()
+    commonFunctions.ensureDeviceSizeValid()
+
     set = storage.get(nowDate, set);
     toastLog(set)
     if (!requestScreenCapture()) {
         toastLog("请求截图失败,脚本退出");
         exit();
     }
-    threads.start(function() {
-        setTimeout(function() {
+    threads.start(function () {
+        setTimeout(function () {
                 toastLog("脚本超时退出");
                 exit();
             },
             900000 / speed);
     });
-    threads.start(function() {
-        setInterval(function() {
+    threads.start(function () {
+        setInterval(function () {
             if (id("com.alipay.mobile.accountauthbiz:id/update_cancel_tv").findOnce()) {
                 toastLog("发现升级窗口");
                 common.clickUiObject(id("com.alipay.mobile.accountauthbiz:id/update_cancel_tv").findOne())
