@@ -1,17 +1,21 @@
 var common = require('./工具方法.js');
 let singletonRequire = require('../lib/SingletonRequirer.js')(runtime, this)
 let floatyInstance = singletonRequire('FloatyUtil')
+let unlocker = require('./lib/Unlock.js')
 
 module.exports = {
     run() {
         main();
     }
 }
+
 function main() {
+    unlocker.exec()
     if (!floatyInstance.init()) {
         toast('创建悬浮窗失败')
         exit()
     }
+    floatyLog('解锁成功')
     floatyLog("开始下班打卡")
     sleep(1500);
     launchApp("天融信云服务");
@@ -28,5 +32,8 @@ function main() {
 function floatyLog(str) {
     log(str)
     context += context === "" ? str : "\n" + str;
-    floatyInstance.setFloatyInfo({ x: parseInt(config.device_width / 4), y: parseInt(config.device_height / 3) }, context, { textSize: 15 })
+    floatyInstance.setFloatyInfo({
+        x: parseInt(config.device_width / 4),
+        y: parseInt(config.device_height / 3)
+    }, context, {textSize: 15})
 }

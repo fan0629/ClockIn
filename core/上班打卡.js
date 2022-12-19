@@ -3,6 +3,7 @@ let GPS = require('./定位');
 let singletonRequire = require('../lib/SingletonRequirer.js')(runtime, this)
 let Timers = singletonRequire("Timers")
 let floatyInstance = singletonRequire('FloatyUtil')
+let unlocker = require('./lib/Unlock.js')
 
 /**
  * 默认地球半径,赤道半径(单位m)
@@ -14,7 +15,7 @@ let companyLatitude = 34.192758;
 // 上班通勤距离，单位米
 let commutingDistance = 9000
 // 上班通勤时间，单位分钟
-let commutingTime = 20
+let commutingTime = 19
 // 打卡范围半径，单位米[
 let radius = 600
 var storage = storages.create("com.fan.打卡"); //获取本地存储
@@ -71,6 +72,8 @@ function main() {
         return;
     }
 
+    unlocker.exec()
+    floatyLog('解锁成功')
     sleep(1500);
     launchApp("天融信云服务");
     sleep(1500);

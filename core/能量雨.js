@@ -223,10 +223,11 @@ function 浇水() {
     checkH5TvTitle();
     // 橙色能量
     click(360, 530)
-    sleep(800)
-    swipe(500, 1800, 500, 500, 1000);
+
     let names = ["思绪万千", "小长安"];
     for (let i = 0; i < 2; i++) {
+        sleep(800)
+        swipe(500, 1800, 500, 500, 1000);
         common.clickByText(names[i]);
         text(names[i] + "的蚂蚁森林").findOne();
         sleep(1000)
