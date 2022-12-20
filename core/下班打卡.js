@@ -1,7 +1,7 @@
 var common = require('./工具方法.js');
 let singletonRequire = require('../lib/SingletonRequirer.js')(runtime, this)
 let floatyInstance = singletonRequire('FloatyUtil')
-let unlocker = require('./lib/Unlock.js')
+let unlocker = require('../lib/Unlock.js')
 
 module.exports = {
     run() {

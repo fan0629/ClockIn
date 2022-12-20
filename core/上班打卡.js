@@ -3,7 +3,7 @@ let GPS = require('./定位');
 let singletonRequire = require('../lib/SingletonRequirer.js')(runtime, this)
 let Timers = singletonRequire("Timers")
 let floatyInstance = singletonRequire('FloatyUtil')
-let unlocker = require('./lib/Unlock.js')
+let unlocker = require('../lib/Unlock.js')
 
 /**
  * 默认地球半径,赤道半径(单位m)
