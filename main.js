@@ -73,7 +73,7 @@ logInfo(['AutoJS version: {}', app.autojs.versionName])
 logInfo(['device info: {} {} {}', device.brand, device.product, device.release])
 
 logInfo(['设备分辨率：[{}, {}]', config.device_width, config.device_height])
-logInfo('======解锁并校验截图权限======')
+/*logInfo('======解锁并校验截图权限======')
 try {
   unlocker.exec()
 } catch (e) {
@@ -94,7 +94,7 @@ debugInfo(['启动参数：{}', JSON.stringify(executeArguments)])
 if (!executeArguments.intent || executeArguments.executeByDispatcher) {
   commonFunctions.requestScreenCaptureOrRestart()
   commonFunctions.ensureDeviceSizeValid()
-}
+}*/
 // 初始化悬浮窗
 if (!FloatyInstance.init()) {
   runningQueueDispatcher.removeRunningTask()
